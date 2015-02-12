@@ -6,6 +6,12 @@ Simple bookmark list as a RESTful API in Ruby.
 * User can read all, create all, but update and deleted only his records
 * Guest has only read access
 
+## Exec tests
+
+```
+rake spec
+```
+
 ## Contributing
 
 1. [Fork](https://help.github.com/articles/fork-a-repo) this repo
