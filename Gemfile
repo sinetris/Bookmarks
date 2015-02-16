@@ -19,4 +19,5 @@ group :test do
   gem 'rspec', '~> 3.2'
   gem 'database_cleaner', '~> 1.4'
   gem 'shoulda-matchers', '~> 2.8', require: false
+  gem 'simplecov', require: false
 end

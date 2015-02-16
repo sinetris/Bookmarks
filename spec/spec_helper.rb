@@ -1,4 +1,11 @@
 ENV["RACK_ENV"] = 'test'
+require 'simplecov'
+SimpleCov.formatter = SimpleCov::Formatter::HTMLFormatter
+SimpleCov.start do
+  add_filter '/spec/'
+  add_filter '/config/'
+end
+
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec'
 require 'database_cleaner'
