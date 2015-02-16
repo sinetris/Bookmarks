@@ -8,6 +8,7 @@ gem 'bcrypt', '~> 3.1'
 gem 'pry', '~> 0.10.1'
 gem 'grape', '~> 0.10.1'
 gem 'cancancan', '~> 1.10'
+gem 'warden', '~> 1.2'
 
 group :development, :test do
   gem 'rack-test', '~> 0.6.3'
