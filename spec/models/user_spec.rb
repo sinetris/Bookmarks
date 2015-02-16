@@ -5,6 +5,7 @@ describe User do
   it { is_expected.to validate_presence_of(:username) }
   it { is_expected.to validate_uniqueness_of(:username) }
   it { is_expected.to have_and_belong_to_many(:roles) }
+  it { is_expected.to have_many(:bookmarks) }
   describe '.authenticate' do
     let(:user) { FactoryGirl.build_stubbed(:user, password: "valid_password") }
     it "authenticate with valid password" do
