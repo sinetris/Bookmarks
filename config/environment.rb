@@ -36,3 +36,11 @@ end
 autoload_dir(Dir[File.expand_path('../../app/**/*.rb', __FILE__)])
 
 Dir[File.expand_path('../initializers/*.rb', __FILE__)].each { |f| require f}
+
+require_relative '../app/api_base'
+
+class App
+  map "/api" do
+    run ApiBase.new
+  end
+end
