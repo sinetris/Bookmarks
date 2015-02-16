@@ -28,7 +28,8 @@ describe "ApiBase#users" do
   end
 
   describe "GET /users" do
-    let!(:num_of_users) { 10 }
+    let!(:limit_size) { Bookmarks::Config::DEFAULT_COLLECTION_LIMIT }
+    let!(:num_of_users) { limit_size + 1 }
     let!(:users) { FactoryGirl.create_list(:user, num_of_users) }
 
     it "return a collection" do
@@ -36,7 +37,15 @@ describe "ApiBase#users" do
       get "/users"
       expect(last_response.status).to be 200
       collection = JSON.parse(last_response.body)
-      expect(collection.count).to be num_of_users
+      expect(collection['users'].count).to be limit_size
+    end
+
+    it "return a collection limited by limit" do
+      limit_users = 5
+      get "/users?limit=#{limit_users}"
+      expect(last_response.status).to be 200
+      collection = JSON.parse(last_response.body)
+      expect(collection['users'].count).to be limit_users
     end
   end
 

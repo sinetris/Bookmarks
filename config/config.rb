@@ -1,5 +1,6 @@
 module Bookmarks
   module Config
+    DEFAULT_COLLECTION_LIMIT = 10
     def root
       @root ||= File.expand_path("../..", __FILE__)
     end

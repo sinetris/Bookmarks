@@ -4,8 +4,8 @@ class ApiBase < Grape::API
   default_format :json
   helpers ApiHelpers
 
-  rescue_from :all do
-    logger.error(e.message)
+  rescue_from :all do |e|
+    App.logger.error(e.message)
     rack_response({status_code: 500, message: "Internal error."}.to_json, 500)
   end
   rescue_from ActiveRecord::RecordNotFound do |e|
