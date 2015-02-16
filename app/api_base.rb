@@ -65,4 +65,5 @@ class ApiBase < Grape::API
 
   mount ApiUsers
   mount ApiRoles
+  mount ApiBookmarks
 end
