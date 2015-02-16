@@ -2,12 +2,12 @@ class ApiUsers < Grape::API
   resource :users do
     desc 'Retrieves users list'
     get do
-      User.all
+      User.accessible_by(current_ability, :read)
     end
 
     desc "Retrieves a user by id."
     get '/:id' do
-      User.find(params[:id])
+      User.accessible_by(current_ability, :read).find(params[:id])
     end
 
     desc "Create a new user."
@@ -16,7 +16,9 @@ class ApiUsers < Grape::API
       requires :password, type: String, desc: "Password"
     end
     post '/' do
+      authenticate!
       @user = User.new(declared_params)
+      authorize! :create, @user
       if @user.save
         @user
       else
@@ -30,7 +32,9 @@ class ApiUsers < Grape::API
       optional :password, type: String, desc: "Password"
     end
     patch "/:id" do
+      authenticate!
       @user = User.find(params[:id])
+      authorize! :update, @user
       if @user.update_attributes!(declared_params)
         @user
       else
@@ -40,7 +44,9 @@ class ApiUsers < Grape::API
 
     desc "Delete a user by id."
     delete "/:id" do
+      authenticate!
       @user = User.find(params[:id])
+      authorize! :delete, @user
       @user.destroy
       @user
     end
