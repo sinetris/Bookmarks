@@ -6,9 +6,47 @@ Simple bookmark list as a RESTful API in Ruby.
 * User can read all, create all, but update and deleted only his records
 * Guest has only read access
 
+## First time setup
+
+Copy the database config file:
+
+```bash
+cp config/database.yml.example config/database.yml
+```
+
+Install gems dependencies:
+
+```bash
+gem install bundler
+bundle install
+rake db:setup
+```
+
+## To Start the app
+
+And start the server:
+
+```bash
+rackup config.ru
+```
+
+To find out more about different `rackup` options:
+
+```bash
+rackup --help
+```
+
+## To Start a console
+
+```bash
+rake console
+```
+
+
 ## Exec tests
 
-```
+```bash
+RACK_ENV=test rake db:setup
 rake spec
 ```
 

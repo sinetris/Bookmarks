@@ -22,6 +22,11 @@ end
 
 require File.expand_path("../config/environment", __FILE__)
 
+desc "Run the console"
+task console: :environment do
+  exec 'pry -r ./config/environment.rb'
+end
+
 seed_loader = Object.new
 seed_loader.instance_eval do
   def load_seed
