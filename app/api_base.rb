@@ -64,4 +64,5 @@ class ApiBase < Grape::API
   end
 
   mount ApiUsers
+  mount ApiRoles
 end
