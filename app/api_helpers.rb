@@ -1,4 +1,5 @@
 module ApiHelpers
+  extend Grape::API::Helpers
   # Warden
   def warden
     env['warden']
@@ -46,5 +47,11 @@ module ApiHelpers
 
   def declared_params
     declared(params, include_missing: false)
+  end
+
+  # shared params
+  params :pagination do
+    optional :limit,  type: Integer, desc: "Limit", default: Bookmarks::Config::DEFAULT_COLLECTION_LIMIT
+    optional :offset, type: Integer, desc: "Offset", default: 0
   end
 end

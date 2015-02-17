@@ -1,16 +1,16 @@
 class ApiRoles < Grape::API
+  helpers ApiHelpers
   resource :roles do
     desc 'Retrieves roles list'
     params do
-      optional :limit,  type: Integer, desc: "Limit"
-      optional :offset, type: Integer, desc: "Offset"
+      use :pagination
     end
     get do
-      limit = params[:limit] || Bookmarks::Config::DEFAULT_COLLECTION_LIMIT
-      offset = params[:offset] || 0
+      limit = params[:limit]
+      offset = params[:offset]
       @roles = Role.limit(limit).offset(offset)
       @roles = @roles.accessible_by(current_ability, :read)
-      {roles: @roles}
+      {roles: @roles, meta: { limit: limit, offset: offset, total: Role.count } }
     end
 
     desc "Retrieves a role by id."

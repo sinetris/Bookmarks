@@ -1,4 +1,5 @@
 class ApiBookmarks < Grape::API
+  helpers ApiHelpers
   namespace :users do
     route_param :user_id do
       before do
@@ -7,15 +8,14 @@ class ApiBookmarks < Grape::API
       resource :bookmarks do
         desc 'Retrieves bookmarks list'
         params do
-          optional :limit,  type: Integer, desc: "Limit"
-          optional :offset, type: Integer, desc: "Offset"
+          use :pagination
         end
         get do
-          limit = params[:limit] || Bookmarks::Config::DEFAULT_COLLECTION_LIMIT
-          offset = params[:offset] || 0
+          limit = params[:limit]
+          offset = params[:offset]
           @bookmarks = @user.bookmarks.limit(limit).offset(offset)
           @bookmarks = @bookmarks.accessible_by(current_ability, :read)
-          {bookmarks: @bookmarks}
+          {bookmarks: @bookmarks, meta: { limit: limit, offset: offset, total: @user.bookmarks.count } }
         end
 
         desc "Retrieves a bookmark by id."

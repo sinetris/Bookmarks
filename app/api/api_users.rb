@@ -1,16 +1,16 @@
 class ApiUsers < Grape::API
+  helpers ApiHelpers
   resource :users do
     desc 'Retrieves users list'
     params do
-      optional :limit,  type: Integer, desc: "Limit"
-      optional :offset, type: Integer, desc: "Offset"
+      use :pagination
     end
     get do
-      limit = params[:limit] || Bookmarks::Config::DEFAULT_COLLECTION_LIMIT
-      offset = params[:offset] || 0
+      limit = params[:limit]
+      offset = params[:offset]
       @users = User.limit(limit).offset(offset)
       @users = @users.accessible_by(current_ability, :read)
-      {users: @users}
+      {users: @users, meta: { limit: limit, offset: offset, total: User.count } }
     end
 
     desc "Retrieves a user by id."
