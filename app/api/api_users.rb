@@ -8,17 +8,17 @@ class ApiUsers < Grape::API
     get do
       limit = params[:limit]
       offset = params[:offset]
-      @users = User.limit(limit).offset(offset)
-      @users = @users.accessible_by(current_ability, :read)
+      users = User.limit(limit).offset(offset)
+      users = users.accessible_by(current_ability, :read)
       pagination = { limit: limit, offset: offset, total: User.count }
       present :meta, pagination, with: PaginationEntity
-      present :users, @users, with: UserEntity
+      present :users, users, with: UserEntity
     end
 
     desc "Retrieves a user by id."
     get '/:id' do
-      @user = User.accessible_by(current_ability, :read).find(params[:id])
-      present :user, @user, with: UserEntity
+      user = User.accessible_by(current_ability, :read).find(params[:id])
+      present :user, user, with: UserEntity
     end
 
     desc "Create a new user."
@@ -28,12 +28,12 @@ class ApiUsers < Grape::API
     end
     post '/' do
       authenticate!
-      @user = User.new(declared_params)
-      authorize! :create, @user
-      if @user.save
-        present :user, @user, with: UserEntity
+      user = User.new(declared_params)
+      authorize! :create, user
+      if user.save
+        present :user, user, with: UserEntity
       else
-        error!({message: @user.errors}, 422)
+        error!({message: user.errors}, 422)
       end
     end
 
@@ -44,22 +44,22 @@ class ApiUsers < Grape::API
     end
     patch "/:id" do
       authenticate!
-      @user = User.find(params[:id])
-      authorize! :update, @user
-      if @user.update_attributes!(declared_params)
-        present :user, @user, with: UserEntity
+      user = User.find(params[:id])
+      authorize! :update, user
+      if user.update_attributes!(declared_params)
+        present :user, user, with: UserEntity
       else
-        error!({message: @user.errors}, 422)
+        error!({message: user.errors}, 422)
       end
     end
 
     desc "Delete a user by id."
     delete "/:id" do
       authenticate!
-      @user = User.find(params[:id])
-      authorize! :delete, @user
-      @user.destroy
-      present :user, @user, with: UserEntity
+      user = User.find(params[:id])
+      authorize! :delete, user
+      user.destroy
+      present :user, user, with: UserEntity
     end
   end
 end
