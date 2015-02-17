@@ -7,6 +7,7 @@ gem 'sqlite3', '~> 1.3'
 gem 'bcrypt', '~> 3.1'
 gem 'pry', '~> 0.10.1'
 gem 'grape', '~> 0.10.1'
+gem 'grape-entity'
 gem 'cancancan', '~> 1.10'
 gem 'warden', '~> 1.2'
 

@@ -10,12 +10,15 @@ class ApiUsers < Grape::API
       offset = params[:offset]
       @users = User.limit(limit).offset(offset)
       @users = @users.accessible_by(current_ability, :read)
-      {users: @users, meta: { limit: limit, offset: offset, total: User.count } }
+      pagination = { limit: limit, offset: offset, total: User.count }
+      present :meta, pagination, with: PaginationEntity
+      present :users, @users, with: UserEntity
     end
 
     desc "Retrieves a user by id."
     get '/:id' do
-      User.accessible_by(current_ability, :read).find(params[:id])
+      @user = User.accessible_by(current_ability, :read).find(params[:id])
+      present :user, @user, with: UserEntity
     end
 
     desc "Create a new user."
@@ -28,7 +31,7 @@ class ApiUsers < Grape::API
       @user = User.new(declared_params)
       authorize! :create, @user
       if @user.save
-        @user
+        present :user, @user, with: UserEntity
       else
         error!({message: @user.errors}, 422)
       end
@@ -44,7 +47,7 @@ class ApiUsers < Grape::API
       @user = User.find(params[:id])
       authorize! :update, @user
       if @user.update_attributes!(declared_params)
-        @user
+        present :user, @user, with: UserEntity
       else
         error!({message: @user.errors}, 422)
       end
@@ -56,7 +59,7 @@ class ApiUsers < Grape::API
       @user = User.find(params[:id])
       authorize! :delete, @user
       @user.destroy
-      @user
+      present :user, @user, with: UserEntity
     end
   end
 end

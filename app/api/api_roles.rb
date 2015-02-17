@@ -10,12 +10,15 @@ class ApiRoles < Grape::API
       offset = params[:offset]
       @roles = Role.limit(limit).offset(offset)
       @roles = @roles.accessible_by(current_ability, :read)
-      {roles: @roles, meta: { limit: limit, offset: offset, total: Role.count } }
+      pagination = { limit: limit, offset: offset, total: Role.count }
+      present :meta, pagination, with: PaginationEntity
+      present :roles, @roles, with: RoleEntity
     end
 
     desc "Retrieves a role by id."
     get '/:id' do
-      Role.accessible_by(current_ability, :read).find(params[:id])
+      @role = Role.accessible_by(current_ability, :read).find(params[:id])
+      present :role, @role, with: RoleEntity
     end
 
     desc "Create a new role."
@@ -27,7 +30,7 @@ class ApiRoles < Grape::API
       @role = Role.new(declared_params)
       authorize! :create, @role
       if @role.save
-        @role
+        present :role, @role, with: RoleEntity
       else
         error!({message: @role.errors}, 422)
       end
@@ -42,7 +45,7 @@ class ApiRoles < Grape::API
       @role = Role.find(params[:id])
       authorize! :update, @role
       if @role.update_attributes!(declared_params)
-        @role
+        present :role, @role, with: RoleEntity
       else
         error!({message: @role.errors}, 422)
       end
@@ -54,7 +57,7 @@ class ApiRoles < Grape::API
       @role = Role.find(params[:id])
       authorize! :delete, @role
       @role.destroy
-      @role
+      present :role, @role, with: RoleEntity
     end
   end
 end

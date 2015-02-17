@@ -15,12 +15,15 @@ class ApiBookmarks < Grape::API
           offset = params[:offset]
           @bookmarks = @user.bookmarks.limit(limit).offset(offset)
           @bookmarks = @bookmarks.accessible_by(current_ability, :read)
-          {bookmarks: @bookmarks, meta: { limit: limit, offset: offset, total: @user.bookmarks.count } }
+          pagination = { limit: limit, offset: offset, total: @user.bookmarks.count }
+          present :meta, pagination, with: PaginationEntity
+          present :bookmarks, @bookmarks, with: BookmarkEntity
         end
 
         desc "Retrieves a bookmark by id."
         get '/:id' do
-          @user.bookmarks.accessible_by(current_ability, :read).find(params[:id])
+          @bookmark = @user.bookmarks.accessible_by(current_ability, :read).find(params[:id])
+          present :bookmark, @bookmark, with: BookmarkEntity
         end
 
         desc "Create a new bookmark."
@@ -33,7 +36,7 @@ class ApiBookmarks < Grape::API
           @bookmark = @user.bookmarks.new(declared_params)
           authorize! :create, @bookmark
           if @bookmark.save
-            @bookmark
+            present :bookmark, @bookmark, with: BookmarkEntity
           else
             error!({message: @bookmark.errors}, 422)
           end
@@ -49,7 +52,7 @@ class ApiBookmarks < Grape::API
           @bookmark = @user.bookmarks.find(params[:id])
           authorize! :update, @bookmark
           if @bookmark.update_attributes!(declared_params)
-            @bookmark
+            present :bookmark, @bookmark, with: BookmarkEntity
           else
             error!({message: @bookmark.errors}, 422)
           end
@@ -61,7 +64,7 @@ class ApiBookmarks < Grape::API
           @bookmark = @user.bookmarks.find(params[:id])
           authorize! :delete, @bookmark
           @bookmark.destroy
-          @bookmark
+          present :bookmark, @bookmark, with: BookmarkEntity
         end
       end
     end
