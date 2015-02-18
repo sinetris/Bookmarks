@@ -6,10 +6,6 @@ module ApiHelpers
   end
 
   def authenticate!
-    error!(
-      {status_code: 401, message: 'Need to authenticate'},
-      401
-    ) unless authenticated?
     warden.authenticate! scope: :api
     warden_user
   end

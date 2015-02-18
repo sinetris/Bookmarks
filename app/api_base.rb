@@ -59,7 +59,7 @@ class ApiBase < Grape::API
   before { authenticate }
 
   # warden authentication failure
-  post 'unauthenticated' do
+  route :any, 'unauthenticated' do
     error!({status_code: 401, message: 'Not authenticated'}, 401)
   end
 
