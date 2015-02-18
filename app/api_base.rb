@@ -11,6 +11,9 @@ class ApiBase < Grape::API
   rescue_from ActiveRecord::RecordNotFound do |e|
     rack_response({status_code: 404, message: e.message}.to_json, 404)
   end
+  rescue_from ActiveRecord::RecordInvalid do |e|
+    rack_response({status_code: 422, message: e.message}.to_json, 422)
+  end
   rescue_from CanCan::AccessDenied do |e|
     rack_response({status_code: 403, message: "Not authorized!"}.to_json, 403)
   end

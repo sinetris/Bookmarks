@@ -53,8 +53,6 @@ class ApiBookmarks < Grape::API
           authorize! :update, bookmark
           if bookmark.update_attributes!(declared_params)
             present :bookmark, bookmark, with: BookmarkEntity
-          else
-            error!({message: bookmark.errors}, 422)
           end
         end
 

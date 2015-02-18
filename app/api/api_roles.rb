@@ -46,8 +46,6 @@ class ApiRoles < Grape::API
       authorize! :update, role
       if role.update_attributes!(declared_params)
         present :role, role, with: RoleEntity
-      else
-        error!({message: role.errors}, 422)
       end
     end
 

@@ -124,6 +124,13 @@ describe "ApiBase#users" do
         expect(last_response.status).to be 200
       end
 
+      it "can't update itself with wrong data" do
+        send_headers(headers_with_authentication)
+        patch "/users/#{current_user.id}", {username: ''}.to_json
+        expect(last_response.body).to include "Validation failed: Username can't be blank"
+        expect(last_response.status).to be 422
+      end
+
       let(:user) { FactoryGirl.create(:user) }
       it "can't update other users" do
         send_headers(headers_with_authentication)

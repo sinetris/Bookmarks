@@ -48,8 +48,6 @@ class ApiUsers < Grape::API
       authorize! :update, user
       if user.update_attributes!(declared_params)
         present :user, user, with: UserEntity
-      else
-        error!({message: user.errors}, 422)
       end
     end
 
